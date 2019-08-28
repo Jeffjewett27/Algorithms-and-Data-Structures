@@ -9,8 +9,9 @@ namespace Algorithms_and_Data_Structures.DataStructures
         private const int DEFAULT = 1000;
 
         private T[] queue;
-        private int head;
-        private int tail;
+        private int head;   //head marks the first item in the queue
+        private int tail;   //tail marks the last item in the queue
+        private bool hasItems;
         private readonly int size;
 
         public int Size { get => size; }
@@ -23,7 +24,8 @@ namespace Algorithms_and_Data_Structures.DataStructures
             queue = new T[DEFAULT];
             head = 0;
             tail = 0;
-            size = default;
+            hasItems = false;
+            size = DEFAULT;
         }
 
         /// <summary>
@@ -35,7 +37,15 @@ namespace Algorithms_and_Data_Structures.DataStructures
             queue = new T[size];
             head = 0;
             tail = 0;
-            this.size = size;
+            hasItems = false;
+            if (size > 0)
+            {
+                this.size = size;
+            } else
+            {
+                throw new ArgumentOutOfRangeException("Size must be positive");
+            }
+
         }
 
         public void Enqueue(T item)
@@ -45,6 +55,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
                 throw new OverflowException("The queue is full");
             }
 
+            hasItems = true;
             queue[tail++] = item;
             tail %= size;
         }
@@ -57,8 +68,13 @@ namespace Algorithms_and_Data_Structures.DataStructures
             }
 
             T item = queue[head];
-            queue[head++] = default(T);
+            queue[head++] = default;
             head %= size;
+
+            if (head == tail)
+            {
+                hasItems = false;
+            }
             return item;
         }
 
@@ -74,12 +90,12 @@ namespace Algorithms_and_Data_Structures.DataStructures
 
         public bool IsFull()
         {
-            return (tail + 1) % size == head;
+            return hasItems && head == tail;
         }
 
         public bool IsEmpty()
         {
-            return head == tail;
+            return !hasItems;
         }
     }
 }

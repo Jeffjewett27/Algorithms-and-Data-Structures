@@ -5,7 +5,7 @@ using System.Text;
 namespace Algorithms_and_Data_Structures.DataStructures
 
 {
-    class Stack<T>
+    public class Stack<T>
     {
         private const int DEFAULT = 1000;
 
