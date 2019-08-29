@@ -29,12 +29,9 @@ namespace Algorithms_and_Data_Structures.DataStructures
 
         private Node head;
         private Node tail;
-        private Node current;
+        private int count;
 
-        public LinkedList()
-        {
-
-        }
+        public int Count { get => count; set => count = value; }
 
         /// <summary>
         /// Adds a node to the LinkedList after the specified node
@@ -64,6 +61,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
             node.Next = newNode;
             newNode.Previous = node;
             newNode.Next = temp;
+            Count++;
         }
 
         /// <summary>
@@ -87,6 +85,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
             node.Next = newNode;
             newNode.Previous = node;
             newNode.Next = temp;
+            Count++;
 
             return newNode;
         }
@@ -119,6 +118,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
             node.Previous = newNode;
             newNode.Next = node;
             newNode.Previous = temp;
+            Count++;
         }
 
         /// <summary>
@@ -142,6 +142,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
             node.Previous = newNode;
             newNode.Next = node;
             newNode.Previous = temp;
+            Count++;
 
             return newNode;
         }
@@ -163,6 +164,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
             Node temp = head;
             head = newNode;
             newNode.Next = temp;
+            Count++;
         }
 
         /// <summary>
@@ -177,6 +179,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
             {
                 Next = temp
             };
+            Count++;
             return head;
         }
 
@@ -196,6 +199,7 @@ namespace Algorithms_and_Data_Structures.DataStructures
             }
             tail.Next = newNode;
             tail = newNode;
+            Count++;
         }
 
         /// <summary>
@@ -207,7 +211,164 @@ namespace Algorithms_and_Data_Structures.DataStructures
         {
             tail.Next = new Node(value);
             tail = tail.Next;
+            Count++;
             return tail;
+        }
+
+        /// <summary>
+        /// Clears the LinkedList and frees all nodes
+        /// </summary>
+        public void Clear()
+        {
+            Node node = head;
+            while (node.Next != null)
+            {
+                node.Previous = null;
+                node.List = null;
+                Node nextNode = node.Next;
+                node.Next = null;
+                node = nextNode;
+            }
+            head = null;
+            tail = null;
+            Count = 0;
+        }
+
+        /// <summary>
+        /// Finds a value in the LinkedList
+        /// </summary>
+        /// <param name="value">The value to search for</param>
+        /// <returns></returns>
+        public bool Contains(T value)
+        {
+            return Find(value) != null;
+        }
+
+        /// <summary>
+        /// Copies values of LinkedList, beginning from the start, to a portion of an array
+        /// </summary>
+        /// <param name="array">The array to copy values to</param>
+        /// <param name="index">The index at which to start the array</param>
+        public void CopyTo(T[] array, int index)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException("array cannot be null");
+            }
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException("index cannot be negative");
+            }
+            if (array.Length - index - 1 < Count)
+            {
+                throw new ArgumentException("LinkedList contains more values than slots in array");
+            }   
+            Node node = head;
+            for (int i = index; i < array.Length; i++)
+            {
+                array[i] = node.Value;
+                node = node.Next;
+            }
+        }
+
+        /// <summary>
+        /// Finds the first node containing a value
+        /// </summary>
+        /// <param name="value">The value to search for</param>
+        /// <returns></returns>
+        public Node Find(T value)
+        {
+            Node node = head;
+            while (node.Next != null)
+            {
+                if (node.Value.Equals(value))
+                {
+                    return node;
+                }
+                node = node.Next;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the first node containing a value
+        /// </summary>
+        /// <param name="value">The value to search for</param>
+        /// <returns></returns>
+        public Node FindLast(T value)
+        {
+            Node node = tail;
+            while (node.Previous != null)
+            {
+                if (node.Value.Equals(value))
+                {
+                    return node;
+                }
+                node = node.Previous;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Removes a specified node from LinkedList
+        /// </summary>
+        /// <param name="node">The node to remove</param>
+        public void Remove(Node node)
+        {
+            node.List = null;
+            if (node.Previous != null)
+            {
+                node.Previous.Next = node.Next;
+                node.Previous = null;
+            } else
+            {
+                head = node.Next;
+            }
+            if (node.Next != null)
+            {
+                node.Next.Previous = node.Previous;
+                node.Next = null;
+            } else
+            {
+                tail = node.Previous;
+            }
+            Count--;
+        }
+
+        /// <summary>
+        /// Removes the first instance of a value from LinkedList
+        /// </summary>
+        /// <param name="value">The value to remove</param>
+        /// <returns></returns>
+        public Node Remove(T value)
+        {
+            Node node = Find(value);
+            Remove(node);
+            return node;
+        }
+
+        /// <summary>
+        /// Removes the first node of the LinkedList
+        /// </summary>
+        /// <returns></returns>
+        public Node RemoveFirst()
+        {
+            Node first = head;
+            Remove(first);
+            return first;
+        }
+
+        /// <summary>
+        /// Removes the last node of the LinkedList
+        /// </summary>
+        /// <returns></returns>
+        public Node RemoveLast()
+        {
+            Node last = tail;
+            Remove(last);
+            return last;
         }
     }
 }
